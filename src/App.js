@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import Header from './components/Header/Header';
+import PlaceList from './components/Places/PlaceList';
+import PlaceDetail from './components/PlaceDetail/PlaceDetail';
+import Map from './components/Map/Map';
+import { CssBaseline, Grid } from '@mui/material';
+import { AutoComplete } from '@react-google-maps/api';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <CssBaseline />
+
+      <Header />
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={4}>
+          <PlaceList />
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <Map />
+        </Grid>
+      </Grid>
+
+      <PlaceDetail />
     </div>
   );
-}
+};
 
 export default App;
