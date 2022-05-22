@@ -1,8 +1,11 @@
+import { Card } from "@mui/material";
 import React from "react";
 
-const PlaceDetail = () => {
+const PlaceDetail = ({place}) => {
     return (
-        <h1>PlaceDetail Component</h1>
+        <Card>
+            <h4>{place.name}</h4>
+        </Card>
     );
 }
 
