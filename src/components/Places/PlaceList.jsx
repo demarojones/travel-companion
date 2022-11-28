@@ -1,12 +1,23 @@
-import React, {useState} from "react";
+import React, {useState, useEffect, createRef} from "react";
 import { CircularProgress, Select, FormControl, Typography, InputLabel, MenuItem, Grid,Box } from '@mui/material';
 import PlaceDetail from "../PlaceDetail/PlaceDetail";
 
-const PlaceList = () => {
+const PlaceList = ( {places, selectedPlace, isLoading} ) => {
 
-    const [places, setPlaces] = useState([{name: 'Coll Place'}, {name:'Barret Parkway'}, {name: 'Mocho'}]);
     const [placeCategory, setPlaceCategory] = useState('');
     const [rating, setRating] = useState('');
+    const [elementRefs, setElementRefs] = useState([]);
+
+    useEffect(() => {
+        console.log('places in list:: ', {places});
+        if (places) {
+            let refs = Array(places?.length).fill().map((_,i) => elementRefs[i] || createRef())
+            setElementRefs(refs);
+        }
+    }, [places])
+    
+
+    console.log({selectedPlace});
 
     const handleCategoryChange = (e) => {
         setPlaceCategory(e.target.value);
@@ -19,7 +30,10 @@ const PlaceList = () => {
     return (
         <Box sx={{padding: '25px'}}>
             <Typography variant="h4">Restaurants, Hotels & Attractions</Typography>
-            <FormControl sx={{ minWidth: 120, marginBottom: '30px', marginRight:'2px' }}>
+            {
+                isLoading ? (<Box><CircularProgress size="5rem" /></Box>) : 
+                ( <>
+                <FormControl sx={{ minWidth: 120, marginBottom: '30px', marginRight:'2px' }}>
                 <InputLabel id="simple-select-label">Category</InputLabel>
                 <Select
                     labelId="simple-select-label"
@@ -48,16 +62,18 @@ const PlaceList = () => {
                     <MenuItem value={4.5}>Above 4.5</MenuItem>
                 </Select>
             </FormControl>
-
             <Grid container sx={{}} spacing={3}>
                 {
                     places?.map((place, i) => (
-                        <Grid item xs={12}>
-                            <PlaceDetail place={place} />
+                        <Grid ref={elementRefs[i]} item key={i} xs={12}>
+                            <PlaceDetail place={place} isSelected={Number(selectedPlace) === i} refProp={elementRefs[i]} />
                         </Grid>
                     ))
                 }
             </Grid>
+            </>
+                )
+            }
         </Box>
     );
 }
