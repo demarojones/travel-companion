@@ -2,10 +2,11 @@ import React, {useState, useEffect, createRef} from "react";
 import { CircularProgress, Select, FormControl, Typography, InputLabel, MenuItem, Grid,Box } from '@mui/material';
 import PlaceDetail from "../PlaceDetail/PlaceDetail";
 
-const PlaceList = ( {places, selectedPlace, isLoading} ) => {
+const PlaceList = ( {places, selectedPlace, isLoading, rating, setRating, setCategory, category } ) => {
 
-    const [placeCategory, setPlaceCategory] = useState('');
-    const [rating, setRating] = useState('');
+    // const [placeCategory, setPlaceCategory] = useState('');
+    // const [rating, setRating] = useState('');
+    
     const [elementRefs, setElementRefs] = useState([]);
 
     useEffect(() => {
@@ -16,11 +17,10 @@ const PlaceList = ( {places, selectedPlace, isLoading} ) => {
         }
     }, [places])
     
-
     console.log({selectedPlace});
 
     const handleCategoryChange = (e) => {
-        setPlaceCategory(e.target.value);
+        setCategory(e.target.value);
     }
 
     const handleRatingChange = (e) => {
@@ -28,7 +28,7 @@ const PlaceList = ( {places, selectedPlace, isLoading} ) => {
     }
 
     return (
-        <Box sx={{padding: '25px'}}>
+        <Box sx={{ padding: '25px' }}>
             <Typography variant="h4">Restaurants, Hotels & Attractions</Typography>
             {
                 isLoading ? (<Box><CircularProgress size="5rem" /></Box>) : 
@@ -38,7 +38,7 @@ const PlaceList = ( {places, selectedPlace, isLoading} ) => {
                 <Select
                     labelId="simple-select-label"
                     id="simple-select"
-                    value={placeCategory}
+                    value={category}
                     label="Category"
                     onChange={handleCategoryChange}
                 >

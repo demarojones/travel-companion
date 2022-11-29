@@ -14,7 +14,7 @@ const options = {
   },
 };
 
-export const getPlaces = async ({ lat, lng }) => {
+export const getPlaces = async ({ category, lat, lng }) => {
   try {
     console.log('get places data:: ', lat, lng);
     const options = {
@@ -33,7 +33,10 @@ export const getPlaces = async ({ lat, lng }) => {
         'X-RapidAPI-Key': process.env.REACT_APP_TRAVEL_ADVISOR_API_KEY,
       },
     };
-    const resp = await axios.get(API_URL, options);
+    const resp = await axios.get(
+      `https://travel-advisor.p.rapidapi.com/${category}/list-by-latlng`,
+      options
+    );
     return resp.data;
   } catch (error) {
     console.error(error);

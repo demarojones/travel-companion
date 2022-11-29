@@ -16,6 +16,10 @@ const App = () => {
   const [infoWindowClicked, setInfoWindowClicked] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [category, setCategory] = useState('restaurants');
+  const [rating, setRating] = useState('');
+  const [filteredPlaces, setFilteredPlaces] = useState([]);
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(({ coords: { latitude, longitude } }) => {
       console.log('Set initial Coords on Load!!', latitude, longitude);
@@ -26,8 +30,9 @@ const App = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    getPlaces(coordinates).then(({ data }) => {
+    getPlaces({ category, ...coordinates }).then(({ data }) => {
       console.log('Data from web service', data);
+      setFilteredPlaces([]);
       const coordUpdates = data?.map((p) => {
         p.latitude = parseFloat(p.latitude);
         p.longitude = parseFloat(p.longitude);
@@ -37,15 +42,28 @@ const App = () => {
       setPlaces(coordUpdates);
       setIsLoading(false);
     });
-  }, [coordinates]);
+  }, [coordinates, category]);
+
+  useEffect(() => {
+    const fpl = places.filter((place) => place.rating >= rating);
+    setFilteredPlaces(fpl);
+  }, [rating]);
 
   return (
     <>
       <CssBaseline />
       <Header />
       <Grid container spacing={2} style={{ width: '100%' }}>
-        <Grid item xs={12} md={4}>
-          <PlaceList places={places} selectedPlace={infoWindowClicked} isLoading={isLoading} />
+        <Grid item xs={12} md={4} sx={{ height: '85vh', overflow: 'auto' }}>
+          <PlaceList
+            places={filteredPlaces.length ? filteredPlaces : places}
+            selectedPlace={infoWindowClicked}
+            isLoading={isLoading}
+            rating={rating}
+            setRating={setRating}
+            category={category}
+            setCategory={setCategory}
+          />
         </Grid>
         <Grid item xs={12} md={8}>
           {coordinates && (
@@ -54,7 +72,7 @@ const App = () => {
               setCoordinates={setCoordinates}
               setInfoWindowClicked={setInfoWindowClicked}
               coordinates={coordinates}
-              places={places}
+              places={filteredPlaces.length ? filteredPlaces : places}
             />
           )}
         </Grid>
